@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>炸金花 - 经典场</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #1a472a 0%, #0d3320 50%, #0a2818 100%);
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .game-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* 顶部信息栏 */
+        .top-bar {
+            height: 50px;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            color: #ffd700;
+            font-size: 14px;
+        }
+
+        .room-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .room-tag {
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .base-score {
+            color: #fff;
+        }
+
+        /* 对手区域 */
+        .opponents-area {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 20px;
+            gap: 30px;
+        }
+
+        .opponent {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .player-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid #ffd700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            position: relative;
+        }
+
+        .player-avatar.folded {
+            border-color: #666;
+            opacity: 0.5;
+        }
+
+        .player-avatar.current-turn::after {
+            content: '⏰';
+            position: absolute;
+            bottom: -5px;
+            right: -5px;
+            font-size: 16px;
+        }
+
+        .player-info {
+            text-align: center;
+            color: #fff;
+        }
+
+        .player-name {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+
+        .player-chips {
+            font-size: 12px;
+            color: #ffd700;
+        }
+
+        .player-bet {
+            font-size: 11px;
+            color: #ff6b6b;
+            margin-top: 2px;
+        }
+
+        /* 对手牌（背面） */
+        .opponent-cards {
+            display: flex;
+            gap: -15px;
+            margin-top: 5px;
+        }
+
+        .card-back {
+            width: 40px;
+            height: 56px;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            border: 2px solid #fff;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-left: -15px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+        }
+
+        .card-back:first-child {
+            margin-left: 0;
+        }
+
+        /* 牌桌中央 */
+        .table-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .pot-area {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid #ffd700;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+
+        .pot-label {
+            color: #aaa;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .pot-amount {
+            color: #ffd700;
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .current-bet {
+            color: #fff;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        /* 自己区域 */
+        .self-area {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .self-cards {
+            display: flex;
+            gap: 10px;
+        }
+
+        .card {
+            width: 80px;
+            height: 112px;
+            background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
+            border: 2px solid #333;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+        }
+
+        .card.red {
+            color: #d32f2f;
+        }
+
+        .card.black {
+            color: #333;
+        }
+
+        .card-suit {
+            font-size: 36px;
+        }
+
+        .card-rank {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        /* 手牌类型 */
+        .hand-type {
+            color: #ffd700;
+            font-size: 18px;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        /* 操作按钮 */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-fold {
+            background: linear-gradient(135deg, #666, #444);
+            color: white;
+        }
+
+        .btn-check {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            color: white;
+        }
+
+        .btn-call {
+            background: linear-gradient(135deg, #2196F3, #1565C0);
+            color: white;
+        }
+
+        .btn-raise {
+            background: linear-gradient(135deg, #FF5722, #D84315);
+            color: white;
+        }
+
+        .btn-compare {
+            background: linear-gradient(135deg, #9C27B0, #7B1FA2);
+            color: white;
+        }
+
+        /* 游戏日志 */
+        .game-log {
+            position: absolute;
+            top: 60px;
+            left: 20px;
+            width: 250px;
+            max-height: 200px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 10px;
+            padding: 10px;
+            overflow-y: auto;
+            font-size: 12px;
+            color: #fff;
+        }
+
+        .log-entry {
+            margin-bottom: 5px;
+            padding: 3px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* 比牌选择弹窗 */
+        .compare-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .compare-modal.active {
+            display: flex;
+        }
+
+        .compare-content {
+            background: linear-gradient(135deg, #2c3e50, #1a2a3a);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            border: 2px solid #ffd700;
+        }
+
+        .compare-title {
+            color: #ffd700;
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .compare-players {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .compare-player {
+            text-align: center;
+            cursor: pointer;
+            padding: 15px;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+
+        .compare-player:hover {
+            background: rgba(255, 215, 0, 0.2);
+        }
+
+        .compare-player.selected {
+            background: rgba(255, 215, 0, 0.3);
+            border: 2px solid #ffd700;
+        }
+
+        .compare-result {
+            text-align: center;
+            color: #fff;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        .btn-confirm {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            color: white;
+            padding: 10px 40px;
+            margin-top: 20px;
+        }
+
+        /* 筹码 */
+        .chips-stack {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle, #ffd700, #ff8c00);
+            border-radius: 50%;
+            border: 2px solid #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        /* 开始游戏按钮 */
+        .start-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a472a 0%, #0d3320 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .start-screen.hidden {
+            display: none;
+        }
+
+        .game-title {
+            font-size: 72px;
+            color: #ffd700;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+            margin-bottom: 50px;
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            color: white;
+            padding: 20px 60px;
+            font-size: 24px;
+            border-radius: 50px;
+        }
+
+        .game-rules {
+            color: #aaa;
+            margin-top: 30px;
+            text-align: center;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+    </style>
+</head>
+<body>
+    <!-- 开始界面 -->
+    <div class="start-screen" id="startScreen">
+        <h1 class="game-title">🎴 炸金花</h1>
+        <button class="btn btn-start" onclick="startGame()">开始游戏</button>
+        <div class="game-rules">
+            <p>豹子 > 同花顺 > 同花 > 顺子 > 对子 > 单张</p>
+            <p>经典2-6人场 | 底注10 | 初始筹码1000</p>
+        </div>
+    </div>
+
+    <!-- 游戏主界面 -->
+    <div class="game-container" id="gameContainer" style="display: none;">
+        <!-- 顶部栏 -->
+        <div class="top-bar">
+            <div class="room-info">
+                <span class="room-tag">经典新手场</span>
+                <span class="base-score">底分: 10</span>
+            </div>
+            <div>第 <span id="roundNum">1</span> 轮</div>
+        </div>
+
+        <!-- 游戏日志 -->
+        <div class="game-log" id="gameLog"></div>
+
+        <!-- 对手区域 -->
+        <div class="opponents-area" id="opponentsArea">
+            <!-- 动态生成对手 -->
+        </div>
+
+        <!-- 牌桌中央 -->
+        <div class="table-center">
+            <div class="pot-area">
+                <div class="pot-label">底池</div>
+                <div class="pot-amount" id="potAmount">0</div>
+                <div class="current-bet">当前下注: <span id="currentBet">10</span></div>
+            </div>
+        </div>
+
+        <!-- 自己区域 -->
+        <div class="self-area">
+            <div class="player-avatar" id="selfAvatar">😎</div>
+            <div class="player-info">
+                <div class="player-name">你</div>
+                <div class="player-chips">💰 <span id="selfChips">1000</span></div>
+                <div class="player-bet" id="selfBet">已下注: 0</div>
+            </div>
+            <div class="hand-type" id="handType"></div>
+            <div class="self-cards" id="selfCards">
+                <!-- 自己的牌 -->
+            </div>
+            <div class="action-buttons" id="actionButtons">
+                <button class="btn btn-fold" onclick="playerAction('fold')">弃牌</button>
+                <button class="btn btn-check" onclick="playerAction('check')" id="btnCheck">过牌</button>
+                <button class="btn btn-call" onclick="playerAction('call')" id="btnCall">跟注</button>
+                <button class="btn btn-raise" onclick="playerAction('raise')">加注</button>
+                <button class="btn btn-compare" onclick="showCompareModal()" id="btnCompare">比牌</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 比牌选择弹窗 -->
+    <div class="compare-modal" id="compareModal">
+        <div class="compare-content">
+            <h2 class="compare-title">选择要比牌的对手</h2>
+            <div class="compare-players" id="comparePlayers"></div>
+            <div class="compare-result" id="compareResult"></div>
+            <button class="btn btn-confirm" onclick="confirmCompare()">确定比牌</button>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+    <script>
+        let game;
+        let selectedComparePlayer = null;
+        let isProcessing = false;
+
+        function startGame() {
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('gameContainer').style.display = 'flex';
+            
+            game = new Game(4);
+            game.start();
+            
+            updateUI();
+            log('🎮 游戏开始！底注10，每人发了3张牌');
+            
+            // AI先行动
+            setTimeout(processAIPlayers, 1000);
+        }
+
+        function updateUI() {
+            if (!game) return;
+            const state = game.getGameState();
+            
+            // 更新底池和当前下注
+            document.getElementById('potAmount').textContent = game.pot;
+            document.getElementById('currentBet').textContent = game.currentBet;
+            document.getElementById('roundNum').textContent = game.round;
+            
+            // 更新对手区域
+            const opponentsArea = document.getElementById('opponentsArea');
+            opponentsArea.innerHTML = '';
+            
+            state.players.forEach((player, index) => {
+                if (index === 0) {
+                    // 更新自己的信息
+                    document.getElementById('selfChips').textContent = player.chips;
+                    document.getElementById('selfBet').textContent = '已下注: ' + player.totalBet;
+                    
+                    // 显示手牌类型
+                    const handTypeDiv = document.getElementById('handType');
+                    if (player.hand.length === 3) {
+                        const evalResult = HandEvaluator.evaluate(player.hand);
+                        handTypeDiv.textContent = '🃏 ' + evalResult.typeName;
+                    }
+                    
+                    // 显示自己的牌
+                    const selfCards = document.getElementById('selfCards');
+                    selfCards.innerHTML = '';
+                    player.hand.forEach(card => {
+                        const cardDiv = document.createElement('div');
+                        cardDiv.className = 'card ' + (card.suit === '♥' || card.suit === '♦' ? 'red' : 'black');
+                        cardDiv.innerHTML = `
+                            <div class="card-suit">${card.suit}</div>
+                            <div class="card-rank">${card.rank}</div>
+                        `;
+                        selfCards.appendChild(cardDiv);
+                    });
+                    
+                    // 更新按钮状态
+                    updateButtons(player);
+                } else {
+                    // 显示对手
+                    const opponentDiv = document.createElement('div');
+                    opponentDiv.className = 'opponent';
+                    
+                    const isCurrentTurn = game.currentPlayerIndex === index && game.gameState === 'playing';
+                    const avatarClass = player.isFolded ? 'player-avatar folded' : 
+                                       (isCurrentTurn ? 'player-avatar current-turn' : 'player-avatar');
+                    
+                    opponentDiv.innerHTML = `
+                        <div class="${avatarClass}">${player.isFolded ? '❌' : (player.aiType === 'george' ? '🐴' : '🦎')}</div>
+                        <div class="player-info">
+                            <div class="player-name">${player.name}</div>
+                            <div class="player-chips">💰 ${player.chips}</div>
+                            ${player.totalBet > 0 ? `<div class="player-bet">已下注: ${player.totalBet}</div>` : ''}
+                        </div>
+                        <div class="opponent-cards">
+                            ${player.isFolded ? '' : `
+                                <div class="card-back">🂠</div>
+                                <div class="card-back">🂠</div>
+                                <div class="card-back">🂠</div>
+                            `}
+                        </div>
+                    `;
+                    opponentsArea.appendChild(opponentDiv);
+                }
+            });
+        }
+
+        function updateButtons(player) {
+            const btnCheck = document.getElementById('btnCheck');
+            const btnCall = document.getElementById('btnCall');
+            const btnCompare = document.getElementById('btnCompare');
+            const isMyTurn = game.currentPlayerIndex === 0 && game.gameState === 'playing' && !player.isFolded;
+            
+            document.querySelectorAll('.action-buttons .btn').forEach(btn => {
+                btn.disabled = !isMyTurn;
+            });
+            
+            if (isMyTurn) {
+                const needToCall = game.currentBet > player.totalBet;
+                btnCheck.style.display = needToCall ? 'none' : 'inline-block';
+                btnCall.style.display = needToCall ? 'inline-block' : 'none';
+                btnCall.textContent = '跟注 ' + (game.currentBet - player.totalBet);
+                
+                // 比牌按钮：检查是否有可比的对手
+                const activeOpponents = game.players.filter((p, i) => i !== 0 && !p.isFolded);
+                btnCompare.disabled = activeOpponents.length === 0;
+                btnCompare.textContent = '比牌 (' + (game.currentBet * 2) + ')';
+            }
+        }
+
+        // 显示比牌选择弹窗
+        function showCompareModal() {
+            const modal = document.getElementById('compareModal');
+            const playersDiv = document.getElementById('comparePlayers');
+            const resultDiv = document.getElementById('compareResult');
+            
+            playersDiv.innerHTML = '';
+            resultDiv.innerHTML = '';
+            selectedComparePlayer = null;
+            
+            // 添加可比的对手
+            game.players.forEach((player, index) => {
+                if (index !== 0 && !player.isFolded) {
+                    const playerDiv = document.createElement('div');
+                    playerDiv.className = 'compare-player';
+                    playerDiv.innerHTML = `
+                        <div class="player-avatar">${player.aiType === 'george' ? '🐴' : '🦎'}</div>
+                        <div class="player-name">${player.name}</div>
+                        <div class="player-chips">💰 ${player.chips}</div>
+                    `;
+                    playerDiv.onclick = () => selectComparePlayer(index, playerDiv);
+                    playersDiv.appendChild(playerDiv);
+                }
+            });
+            
+            modal.classList.add('active');
+        }
+
+        // 选择要比牌的对手
+        function selectComparePlayer(index, element) {
+            selectedComparePlayer = index;
+            document.querySelectorAll('.compare-player').forEach(el => {
+                el.classList.remove('selected');
+            });
+            element.classList.add('selected');
+        }
+
+        // 确认比牌
+        function confirmCompare() {
+            if (selectedComparePlayer === null) {
+                alert('请先选择一个对手！');
+                return;
+            }
+            
+            const modal = document.getElementById('compareModal');
+            modal.classList.remove('active');
+            
+            // 执行比牌
+            const result = game.compare(selectedComparePlayer);
+            
+            if (result.success) {
+                log('你: ' + result.message);
+                
+                // 显示比牌结果
+                let resultMsg = '=== 比牌结果 ===\n';
+                resultMsg += `你的牌: ${game.players[0].hand.map(c => c.toString()).join(' ')} (${result.playerHand.typeName})\n`;
+                resultMsg += `${game.players[selectedComparePlayer].name}的牌: ${game.players[selectedComparePlayer].hand.map(c => c.toString()).join(' ')} (${result.opponentHand.typeName})\n\n`;
+                
+                if (result.win === true) {
+                    resultMsg += '🎉 你赢了！对方弃牌';
+                } else if (result.win === false) {
+                    resultMsg += '💔 你输了，已弃牌';
+                } else {
+                    resultMsg += '🤝 平局';
+                }
+                
+                alert(resultMsg);
+                
+                updateUI();
+                
+                if (game.gameState === 'ended') {
+                    setTimeout(endGame, 500);
+                } else {
+                    setTimeout(processAIPlayers, 1000);
+                }
+            } else {
+                log('❌ ' + result.message);
+            }
+        }
+
+        function playerAction(action) {
+            if (isProcessing) return;
+            
+            const player = game.players[0];
+            const result = game.playerAction(action);
+            
+            if (result.success) {
+                log('你: ' + result.message);
+                updateUI();
+                
+                if (game.gameState === 'ended') {
+                    setTimeout(endGame, 1000);
+                } else {
+                    setTimeout(processAIPlayers, 1000);
+                }
+            } else {
+                log('❌ ' + result.message);
+            }
+        }
+
+        function processAIPlayers() {
+            if (game.gameState === 'ended') {
+                endGame();
+                return;
+            }
+            
+            isProcessing = true;
+            
+            function processNextAI() {
+                if (game.gameState === 'ended' || game.currentPlayerIndex === 0) {
+                    isProcessing = false;
+                    updateUI();
+                    if (game.gameState === 'ended') {
+                        setTimeout(endGame, 1000);
+                    }
+                    return;
+                }
+                
+                const result = game.processAITurn();
+                if (result) {
+                    log(result.message);
+                    updateUI();
+                    setTimeout(processNextAI, 1500);
+                } else {
+                    processNextAI();
+                }
+            }
+            
+            processNextAI();
+        }
+
+        function endGame() {
+            const result = game.endGame();
+            
+            if (result.winner) {
+                const isPlayerWin = result.winner.id === 0;
+                
+                if (isPlayerWin) {
+                    // 玩家获胜，显示比牌结果
+                    showCompareResult(result);
+                } else {
+                    // AI获胜，显示获胜者
+                    log(`🏆 ${result.winner.name} 获胜！赢得 ${result.winAmount} 筹码`);
+                    alert(`游戏结束！\n${result.winner.name} 获胜！\n赢得 ${result.winAmount} 筹码`);
+                    resetGame();
+                }
+            } else {
+                log('游戏结束，无人获胜');
+                resetGame();
+            }
+        }
+
+        function showCompareResult(result) {
+            // 显示所有玩家的牌
+            let message = '🎉 恭喜你获胜！\n\n';
+            message += `赢得 ${result.winAmount} 筹码\n\n`;
+            message += '=== 最终牌型 ===\n';
+            
+            game.players.forEach(player => {
+                if (!player.isFolded && player.hand.length === 3) {
+                    const evalResult = HandEvaluator.evaluate(player.hand);
+                    const cardsStr = player.hand.map(c => c.toString()).join(' ');
+                    message += `${player.name}: ${cardsStr} (${evalResult.typeName})\n`;
+                }
+            });
+            
+            alert(message);
+            resetGame();
+        }
+
+        function resetGame() {
+            setTimeout(() => {
+                if (confirm('是否开始新的一局？')) {
+                    game.start();
+                    updateUI();
+                    log('🎮 新的一局开始！');
+                    setTimeout(processAIPlayers, 1000);
+                } else {
+                    document.getElementById('startScreen').classList.remove('hidden');
+                    document.getElementById('gameContainer').style.display = 'none';
+                }
+            }, 500);
+        }
+
+        function log(message) {
+            const logDiv = document.getElementById('gameLog');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.textContent = new Date().toLocaleTimeString() + ' ' + message;
+            logDiv.appendChild(entry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            log('🐴 炸金花游戏已加载，点击"开始游戏"开始');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  zjh-game:
+    image: nginx:alpine
+    container_name: zjh-game
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./zjh-game.html:/usr/share/nginx/html/index.html:ro
+      - ./game.js:/usr/share/nginx/html/game.js:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    environment:
+      - NGINX_HOST=139.196.90.198
+      - NGINX_PORT=80
