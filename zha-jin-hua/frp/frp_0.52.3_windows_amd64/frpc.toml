@@ -1,0 +1,9 @@
+serverAddr = "139.196.90.198"
+serverPort = 7000
+auth.token = "zha_jin_hua_token_2026"
+
+[[proxies]]
+name = "zha-jin-hua"
+type = "tcp"
+localPort = 3000
+remotePort = 8081

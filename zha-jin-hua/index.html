@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0d3320">
+    <title>炸金花豪华版 - Casino Style</title>
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎰</text></svg>">
+    <link rel="stylesheet" href="css/style.css?v=5.1">
+</head>
+<body>
+    <!-- 赌场灯光效果 -->
+    <div class="casino-lights"></div>
+    
+    <div class="game-container">
+        <h1>🎰 炸金花豪华版 🎰</h1>
+        
+        <!-- 游戏状态 -->
+        <div class="game-status">
+            <div class="status-item">
+                👥 人数: 
+                <select id="player-count-select" class="player-select-dropdown">
+                    <option value="2">2人</option>
+                    <option value="3">3人</option>
+                    <option value="4" selected>4人</option>
+                    <option value="5">5人</option>
+                    <option value="6">6人</option>
+                </select>
+            </div>
+            <div class="status-item">
+                🎲 轮次: <span id="round-num">1</span>
+            </div>
+            <div class="status-item">
+                🔊 音效: <span id="audio-status">开</span>
+            </div>
+        </div>
+        
+        <!-- 牌桌 -->
+        <div class="poker-table" id="poker-table">
+            <div class="players-container" id="players-container">
+                <!-- 动态生成玩家 -->
+            </div>
+            <!-- 底池显示 - 中间 -->
+            <div class="pot-display" id="pot-display">
+                <div class="pot-label">底池</div>
+                <div class="pot-amount" id="pot-amount">0</div>
+            </div>
+        </div>
+        
+        <!-- 操作按钮 -->
+        <div class="controls" id="controls">
+            <button id="btn-start" class="btn btn-primary">🎮 开始游戏</button>
+            <button id="btn-look" class="btn" style="display:none;">👁️ 看牌</button>
+            <button id="btn-call" class="btn" style="display:none;">💰 跟注</button>
+            <button id="btn-raise" class="btn" style="display:none;">⬆️ 加注</button>
+            <button id="btn-showdown" class="btn btn-warning" style="display:none;">🔥 开牌</button>
+            <button id="btn-fold" class="btn btn-danger" style="display:none;">🚫 弃牌</button>
+            <button id="btn-restart" class="btn" style="display:none;">🔄 再来一局</button>
+            <button id="btn-audio" class="btn">🔊 音效</button>
+        </div>
+        
+        <!-- 对话聊天区域 -->
+        <div class="chat-container" id="chat-container">
+            <div class="chat-header">
+                <span>💬 牌桌对话</span>
+            </div>
+            <div class="chat-messages" id="chat-messages"></div>
+            <div class="chat-input-area">
+                <input type="text" id="chat-input" placeholder="输入消息..." maxlength="50">
+                <button id="btn-send-chat" class="btn">发送</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 胜利特效容器 -->
+    <div id="effects-container"></div>
+    
+    <!-- 脚本 -->
+    <script src="js/audio.js?v=3.3"></script>
+    <script src="js/effects.js?v=3.3"></script>
+    <script src="js/game.js?v=3.3"></script>
+    <script src="js/ai.js?v=3.3"></script>
+    <script src="js/ui.js?v=3.3"></script>
+    <script>
+        // Agent 管理器 - 连接 Agent 服务
+        window.AgentManager = {
+            ws: null,
+            connectors: {},
+            pendingRequests: {},
+            requestId: 0,
+
+            init() {
+                this.connect('ws://localhost:3001');
+            },
+
+            connect(url) {
+                this.ws = new WebSocket(url);
+
+                this.ws.onopen = () => {
+                    console.log('🤖 Agent 服务已连接');
+                    // 通知 Agent 有哪些玩家是 AI
+                    this.notifyGameStart();
+                };
+
+                this.ws.onmessage = (event) => {
+                    const msg = JSON.parse(event.data);
+                    this.handleMessage(msg);
+                };
+
+                this.ws.onerror = (e) => {
+                    console.log('🤖 Agent 连接错误:', e);
+                };
+
+                this.ws.onclose = () => {
+                    console.log('🤖 Agent 服务断开，5秒后重连...');
+                    setTimeout(() => this.connect(url), 5000);
+                };
+            },
+
+            notifyGameStart() {
+                this.send({
+                    type: 'start_game',
+                    game: 'zjh',
+                    players: ['玩家', '乔治', '佩奇', '多多', '拉拉', '汤姆']
+                });
+            },
+
+            send(msg) {
+                if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+                    this.ws.send(JSON.stringify(msg));
+                }
+            },
+
+            handleMessage(msg) {
+                const { requestId } = msg;
+                if (requestId && this.pendingRequests[requestId]) {
+                    const { resolve, timeout } = this.pendingRequests[requestId];
+                    clearTimeout(timeout);
+                    resolve(msg);
+                    delete this.pendingRequests[requestId];
+                }
+            },
+
+            // 注册玩家连接
+            registerPlayer(playerIndex, playerName, agentName) {
+                this.connectors[playerIndex] = { playerName, agentName };
+            },
+
+            // 获取 AI 决策
+            getDecision(playerIndex, state, availableActions) {
+                return new Promise((resolve, reject) => {
+                    const id = ++this.requestId;
+                    const timeout = setTimeout(() => {
+                        if (this.pendingRequests[id]) {
+                            delete this.pendingRequests[id];
+                            reject(new Error('Agent 响应超时'));
+                        }
+                    }, 15000); // 15秒超时
+
+                    this.pendingRequests[id] = { resolve, timeout };
+
+                    this.send({
+                        requestId: id,
+                        type: 'action',
+                        playerIndex,
+                        state,
+                        availableActions
+                    });
+                });
+            },
+
+            // 聊天
+            chat(playerIndex, message) {
+                return new Promise((resolve) => {
+                    const id = ++this.requestId;
+                    this.pendingRequests[id] = { resolve, timeout: null };
+
+                    this.send({
+                        requestId: id,
+                        type: 'chat',
+                        playerIndex,
+                        message
+                    });
+                });
+            }
+        };
+
+        // 页面加载时初始化游戏并显示玩家
+        window.addEventListener('load', function() {
+            // 先连接 Agent 服务
+            window.AgentManager.init();
+
+            const playerCount = parseInt(document.getElementById('player-count-select').value);
+            initGame(playerCount);
+            createPlayerUI();
+
+            // 注册 AI 玩家到 Agent 服务
+            setTimeout(() => {
+                const aiNames = ['乔治', '佩奇', '多多'];
+                for (let i = 1; i < gameState.players.length; i++) {
+                    if (gameState.players[i].type === 'ai' && aiNames[i-1]) {
+                        window.AgentManager.registerPlayer(i, gameState.players[i].name, aiNames[i-1]);
+                    }
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

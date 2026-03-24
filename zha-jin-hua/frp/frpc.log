@@ -1,0 +1,76 @@
+2026/03/17 19:16:35 [I] [root.go:139] start frpc service for config file [D:\zha-jin-hua\frp\frp_0.52.3_windows_amd64\frpc.toml]
+2026/03/17 19:16:35 [I] [service.go:299] [48f91befe3c141f3] login to server success, get run id [48f91befe3c141f3]
+2026/03/17 19:16:35 [I] [proxy_manager.go:156] [48f91befe3c141f3] proxy added: [zha-jin-hua]
+2026/03/17 19:16:35 [I] [control.go:173] [48f91befe3c141f3] [zha-jin-hua] start proxy success
+2026/03/17 19:17:10 [E] [proxy.go:195] [48f91befe3c141f3] [zha-jin-hua] connect to local service [127.0.0.1:3000] error: dial tcp 127.0.0.1:3000: connectex: No connection could be made because the target machine actively refused it.
+2026/03/17 19:17:10 [E] [proxy.go:195] [48f91befe3c141f3] [zha-jin-hua] connect to local service [127.0.0.1:3000] error: dial tcp 127.0.0.1:3000: connectex: No connection could be made because the target machine actively refused it.
+2026/03/17 19:17:26 [E] [proxy.go:195] [48f91befe3c141f3] [zha-jin-hua] connect to local service [127.0.0.1:3000] error: dial tcp 127.0.0.1:3000: connectex: No connection could be made because the target machine actively refused it.
+2026/03/17 19:18:05 [E] [proxy.go:195] [48f91befe3c141f3] [zha-jin-hua] connect to local service [127.0.0.1:3000] error: dial tcp 127.0.0.1:3000: connectex: No connection could be made because the target machine actively refused it.
+2026/03/17 19:18:07 [E] [proxy.go:195] [48f91befe3c141f3] [zha-jin-hua] connect to local service [127.0.0.1:3000] error: dial tcp 127.0.0.1:3000: connectex: No connection could be made because the target machine actively refused it.
+2026/03/17 21:38:48 [I] [control.go:253] [48f91befe3c141f3] control writer is closing
+2026/03/17 21:38:50 [I] [visitor_manager.go:79] [48f91befe3c141f3] gracefully shutdown visitor manager
+2026/03/17 21:38:50 [I] [service.go:212] [48f91befe3c141f3] try to reconnect to server...
+2026/03/17 21:38:50 [W] [service.go:215] [48f91befe3c141f3] reconnect to server error: dial tcp 139.196.90.198:7000: connectex: A socket operation was attempted to an unreachable host., wait 1s for another retry
+2026/03/17 21:38:52 [I] [service.go:212] [48f91befe3c141f3] try to reconnect to server...
+2026/03/17 21:38:52 [W] [service.go:215] [48f91befe3c141f3] reconnect to server error: dial tcp 139.196.90.198:7000: connectex: A socket operation was attempted to an unreachable host., wait 2s for another retry
+2026/03/17 21:38:53 [I] [service.go:212] [48f91befe3c141f3] try to reconnect to server...
+2026/03/17 21:38:53 [W] [service.go:215] [48f91befe3c141f3] reconnect to server error: dial tcp 139.196.90.198:7000: connectex: A socket operation was attempted to an unreachable host., wait 4s for another retry
+2026/03/17 21:38:58 [I] [service.go:212] [48f91befe3c141f3] try to reconnect to server...
+2026/03/17 21:38:58 [W] [service.go:215] [48f91befe3c141f3] reconnect to server error: dial tcp 139.196.90.198:7000: connectex: A socket operation was attempted to an unreachable host., wait 8s for another retry
+2026/03/17 21:39:06 [I] [service.go:212] [48f91befe3c141f3] try to reconnect to server...
+2026/03/17 21:39:06 [W] [service.go:215] [48f91befe3c141f3] reconnect to server error: dial tcp 139.196.90.198:7000: connectex: A socket operation was attempted to an unreachable host., wait 16s for another retry
+2026/03/17 21:39:23 [I] [service.go:212] [48f91befe3c141f3] try to reconnect to server...
+2026/03/17 21:39:23 [W] [service.go:215] [48f91befe3c141f3] reconnect to server error: dial tcp 139.196.90.198:7000: connectex: A socket operation was attempted to an unreachable host., wait 20s for another retry
+2026/03/17 21:39:43 [I] [service.go:212] [48f91befe3c141f3] try to reconnect to server...
+2026/03/17 21:39:43 [W] [service.go:215] [48f91befe3c141f3] reconnect to server error: dial tcp 139.196.90.198:7000: connectex: A socket operation was attempted to an unreachable host., wait 20s for another retry
+2026/03/17 21:40:03 [I] [service.go:212] [48f91befe3c141f3] try to reconnect to server...
+2026/03/17 21:40:03 [W] [service.go:215] [48f91befe3c141f3] reconnect to server error: dial tcp 139.196.90.198:7000: connectex: A socket operation was attempted to an unreachable host., wait 20s for another retry
+2026/03/17 21:40:25 [I] [service.go:212] [48f91befe3c141f3] try to reconnect to server...
+2026/03/17 21:40:25 [W] [service.go:215] [48f91befe3c141f3] reconnect to server error: dial tcp 139.196.90.198:7000: connectex: A socket operation was attempted to an unreachable host., wait 20s for another retry
+2026/03/17 21:40:45 [I] [service.go:212] [48f91befe3c141f3] try to reconnect to server...
+2026/03/17 21:40:55 [W] [service.go:215] [48f91befe3c141f3] reconnect to server error: dial tcp 139.196.90.198:7000: i/o timeout, wait 20s for another retry
+2026/03/17 21:41:16 [I] [service.go:212] [48f91befe3c141f3] try to reconnect to server...
+2026/03/17 21:41:16 [I] [service.go:299] [48f91befe3c141f3] login to server success, get run id [48f91befe3c141f3]
+2026/03/17 21:41:16 [I] [proxy_manager.go:156] [48f91befe3c141f3] proxy added: [zha-jin-hua]
+2026/03/17 21:41:16 [I] [control.go:173] [48f91befe3c141f3] [zha-jin-hua] start proxy success
+2026/03/17 21:56:22 [E] [proxy.go:195] [48f91befe3c141f3] [zha-jin-hua] connect to local service [127.0.0.1:3000] error: dial tcp 127.0.0.1:3000: connectex: No connection could be made because the target machine actively refused it.
+2026/03/17 21:56:39 [E] [proxy.go:195] [48f91befe3c141f3] [zha-jin-hua] connect to local service [127.0.0.1:3000] error: dial tcp 127.0.0.1:3000: connectex: No connection could be made because the target machine actively refused it.
+2026/03/17 21:59:28 [E] [proxy.go:195] [48f91befe3c141f3] [zha-jin-hua] connect to local service [127.0.0.1:3000] error: dial tcp 127.0.0.1:3000: connectex: No connection could be made because the target machine actively refused it.
+2026/03/17 22:00:34 [E] [proxy.go:195] [48f91befe3c141f3] [zha-jin-hua] connect to local service [127.0.0.1:3000] error: dial tcp 127.0.0.1:3000: connectex: No connection could be made because the target machine actively refused it.
+2026/03/17 22:06:04 [E] [proxy.go:195] [48f91befe3c141f3] [zha-jin-hua] connect to local service [127.0.0.1:3000] error: dial tcp 127.0.0.1:3000: connectex: No connection could be made because the target machine actively refused it.
+2026/03/17 22:09:48 [E] [proxy.go:195] [48f91befe3c141f3] [zha-jin-hua] connect to local service [127.0.0.1:3000] error: dial tcp 127.0.0.1:3000: connectex: No connection could be made because the target machine actively refused it.
+2026/03/17 22:09:55 [E] [proxy.go:195] [48f91befe3c141f3] [zha-jin-hua] connect to local service [127.0.0.1:3000] error: dial tcp 127.0.0.1:3000: connectex: No connection could be made because the target machine actively refused it.
+2026/03/17 22:13:07 [E] [proxy.go:195] [48f91befe3c141f3] [zha-jin-hua] connect to local service [127.0.0.1:3000] error: dial tcp 127.0.0.1:3000: connectex: No connection could be made because the target machine actively refused it.
+2026/03/17 22:22:49 [E] [proxy.go:195] [48f91befe3c141f3] [zha-jin-hua] connect to local service [127.0.0.1:3000] error: dial tcp 127.0.0.1:3000: connectex: No connection could be made because the target machine actively refused it.
+2026/03/17 22:24:15 [E] [proxy.go:195] [48f91befe3c141f3] [zha-jin-hua] connect to local service [127.0.0.1:3000] error: dial tcp 127.0.0.1:3000: connectex: No connection could be made because the target machine actively refused it.
+2026/03/17 22:24:17 [E] [proxy.go:195] [48f91befe3c141f3] [zha-jin-hua] connect to local service [127.0.0.1:3000] error: dial tcp 127.0.0.1:3000: connectex: No connection could be made because the target machine actively refused it.
+2026/03/17 22:55:25 [E] [proxy.go:195] [48f91befe3c141f3] [zha-jin-hua] connect to local service [127.0.0.1:3000] error: dial tcp 127.0.0.1:3000: connectex: No connection could be made because the target machine actively refused it.
+2026/03/17 22:55:28 [E] [proxy.go:195] [48f91befe3c141f3] [zha-jin-hua] connect to local service [127.0.0.1:3000] error: dial tcp 127.0.0.1:3000: connectex: No connection could be made because the target machine actively refused it.
+2026/03/17 22:55:31 [E] [proxy.go:195] [48f91befe3c141f3] [zha-jin-hua] connect to local service [127.0.0.1:3000] error: dial tcp 127.0.0.1:3000: connectex: No connection could be made because the target machine actively refused it.
+2026/03/17 22:58:46 [E] [proxy.go:195] [48f91befe3c141f3] [zha-jin-hua] connect to local service [127.0.0.1:3000] error: dial tcp 127.0.0.1:3000: connectex: No connection could be made because the target machine actively refused it.
+2026/03/18 00:36:37 [I] [control.go:253] [48f91befe3c141f3] control writer is closing
+2026/03/18 00:36:37 [I] [visitor_manager.go:79] [48f91befe3c141f3] gracefully shutdown visitor manager
+2026/03/18 00:36:37 [I] [service.go:212] [48f91befe3c141f3] try to reconnect to server...
+2026/03/18 00:36:37 [W] [service.go:215] [48f91befe3c141f3] reconnect to server error: dial tcp 139.196.90.198:7000: connectex: A socket operation was attempted to an unreachable host., wait 1s for another retry
+2026/03/18 00:36:38 [I] [service.go:212] [48f91befe3c141f3] try to reconnect to server...
+2026/03/18 00:36:38 [W] [service.go:215] [48f91befe3c141f3] reconnect to server error: dial tcp 139.196.90.198:7000: connectex: A socket operation was attempted to an unreachable host., wait 2s for another retry
+2026/03/18 00:36:40 [I] [service.go:212] [48f91befe3c141f3] try to reconnect to server...
+2026/03/18 00:36:42 [I] [service.go:299] [48f91befe3c141f3] login to server success, get run id [48f91befe3c141f3]
+2026/03/18 00:36:42 [I] [proxy_manager.go:156] [48f91befe3c141f3] proxy added: [zha-jin-hua]
+2026/03/18 00:36:42 [I] [control.go:173] [48f91befe3c141f3] [zha-jin-hua] start proxy success
+2026/03/18 12:20:26 [E] [proxy.go:195] [48f91befe3c141f3] [zha-jin-hua] connect to local service [127.0.0.1:3000] error: dial tcp 127.0.0.1:3000: connectex: No connection could be made because the target machine actively refused it.
+2026/03/18 12:20:28 [E] [proxy.go:195] [48f91befe3c141f3] [zha-jin-hua] connect to local service [127.0.0.1:3000] error: dial tcp 127.0.0.1:3000: connectex: No connection could be made because the target machine actively refused it.
+2026/03/18 12:20:31 [E] [proxy.go:195] [48f91befe3c141f3] [zha-jin-hua] connect to local service [127.0.0.1:3000] error: dial tcp 127.0.0.1:3000: connectex: No connection could be made because the target machine actively refused it.
+2026/03/18 12:20:32 [E] [proxy.go:195] [48f91befe3c141f3] [zha-jin-hua] connect to local service [127.0.0.1:3000] error: dial tcp 127.0.0.1:3000: connectex: No connection could be made because the target machine actively refused it.
+2026/03/18 12:20:32 [E] [proxy.go:195] [48f91befe3c141f3] [zha-jin-hua] connect to local service [127.0.0.1:3000] error: dial tcp 127.0.0.1:3000: connectex: No connection could be made because the target machine actively refused it.
+2026/03/18 12:20:32 [E] [proxy.go:195] [48f91befe3c141f3] [zha-jin-hua] connect to local service [127.0.0.1:3000] error: dial tcp 127.0.0.1:3000: connectex: No connection could be made because the target machine actively refused it.
+2026/03/18 12:20:32 [E] [proxy.go:195] [48f91befe3c141f3] [zha-jin-hua] connect to local service [127.0.0.1:3000] error: dial tcp 127.0.0.1:3000: connectex: No connection could be made because the target machine actively refused it.
+2026/03/18 12:22:52 [E] [proxy.go:195] [48f91befe3c141f3] [zha-jin-hua] connect to local service [127.0.0.1:3000] error: dial tcp 127.0.0.1:3000: connectex: No connection could be made because the target machine actively refused it.
+2026/03/18 12:22:54 [E] [proxy.go:195] [48f91befe3c141f3] [zha-jin-hua] connect to local service [127.0.0.1:3000] error: dial tcp 127.0.0.1:3000: connectex: No connection could be made because the target machine actively refused it.
+2026/03/18 12:22:59 [E] [proxy.go:195] [48f91befe3c141f3] [zha-jin-hua] connect to local service [127.0.0.1:3000] error: dial tcp 127.0.0.1:3000: connectex: No connection could be made because the target machine actively refused it.
+2026/03/18 12:23:00 [E] [proxy.go:195] [48f91befe3c141f3] [zha-jin-hua] connect to local service [127.0.0.1:3000] error: dial tcp 127.0.0.1:3000: connectex: No connection could be made because the target machine actively refused it.
+2026/03/18 12:23:00 [E] [proxy.go:195] [48f91befe3c141f3] [zha-jin-hua] connect to local service [127.0.0.1:3000] error: dial tcp 127.0.0.1:3000: connectex: No connection could be made because the target machine actively refused it.
+2026/03/18 12:23:00 [E] [proxy.go:195] [48f91befe3c141f3] [zha-jin-hua] connect to local service [127.0.0.1:3000] error: dial tcp 127.0.0.1:3000: connectex: No connection could be made because the target machine actively refused it.
+2026/03/18 12:23:10 [E] [proxy.go:195] [48f91befe3c141f3] [zha-jin-hua] connect to local service [127.0.0.1:3000] error: dial tcp 127.0.0.1:3000: connectex: No connection could be made because the target machine actively refused it.
+2026/03/18 12:23:34 [E] [proxy.go:195] [48f91befe3c141f3] [zha-jin-hua] connect to local service [127.0.0.1:3000] error: dial tcp 127.0.0.1:3000: connectex: No connection could be made because the target machine actively refused it.
+2026/03/18 12:24:03 [E] [proxy.go:195] [48f91befe3c141f3] [zha-jin-hua] connect to local service [127.0.0.1:3000] error: dial tcp 127.0.0.1:3000: connectex: No connection could be made because the target machine actively refused it.

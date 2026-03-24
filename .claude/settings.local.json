@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(tasklist)",
+      "Bash(more +20)",
+      "Bash(powershell -Command \"Stop-Process -Id 1000 -Force\")",
+      "Bash(netstat -ano)",
+      "Bash(findstr \"139.196.90.198:7000\")",
+      "Bash(*)",
+      "Read(*)",
+      "Write(*)",
+      "Edit(*)",
+      "Git(*)",
+      "Npm(*)",
+      "Pip(*)"
+    ]
+  }
+}

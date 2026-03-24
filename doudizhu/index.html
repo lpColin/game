@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>斗地主 - AI 陪玩</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="favicon.ico">
+</head>
+<body>
+    <div class="game-container">
+        <!-- 游戏信息栏 -->
+        <div class="game-header">
+            <h1>🎴 斗地主</h1>
+            <div class="game-info">
+                <span id="game-phase">准备中</span>
+                <span id="game-status"></span>
+            </div>
+            <button id="btn-restart" class="btn btn-small">重新开始</button>
+        </div>
+
+        <!-- 玩家区域 -->
+        <div class="players-area">
+            <!-- 农民A (上方) -->
+            <div class="player-zone top" id="player-cards-1">
+                <div class="player-info">
+                    <span class="player-avatar">👨‍🌾</span>
+                    <span class="player-name">农民A</span>
+                    <span class="card-count">17张</span>
+                </div>
+                <div class="cards-container"></div>
+            </div>
+
+            <!-- 中间区域 -->
+            <div class="center-area">
+                <!-- 农民B (左) -->
+                <div class="player-zone left" id="player-cards-2">
+                    <div class="player-info">
+                        <span class="player-avatar">👩‍🌾</span>
+                        <span class="player-name">农民B</span>
+                        <span class="card-count">17张</span>
+                    </div>
+                    <div class="cards-container"></div>
+                </div>
+
+                <!-- 出牌区域 -->
+                <div class="table-area">
+                    <div class="played-cards-container" id="table-cards"></div>
+                </div>
+
+                <!-- 玩家 (右/下方) -->
+                <div class="player-zone right" id="player-cards-0">
+                    <div class="player-info">
+                        <span class="player-avatar">🎮</span>
+                        <span class="player-name">玩家</span>
+                        <span class="card-count">17张</span>
+                    </div>
+                    <div class="cards-container"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 叫地主按钮 -->
+        <div class="action-buttons" id="call-buttons" style="display: none;">
+            <button id="btn-call" class="btn btn-primary">叫地主</button>
+            <button id="btn-no-call" class="btn btn-secondary">不叫</button>
+        </div>
+
+        <!-- 出牌按钮 -->
+        <div class="action-buttons" id="play-buttons" style="display: none;">
+            <button id="btn-play" class="btn btn-primary">出牌</button>
+            <button id="btn-pass" class="btn btn-secondary">不出</button>
+        </div>
+
+        <!-- 聊天区域 -->
+        <div class="chat-container" id="chat-container">
+            <div class="chat-header">
+                <span>💬 聊天</span>
+            </div>
+            <div class="chat-messages" id="chat-messages"></div>
+            <div class="chat-input-area">
+                <input type="text" id="chat-input" placeholder="发送消息..." maxlength="50">
+                <button id="btn-send-chat" class="btn">发送</button>
+            </div>
+        </div>
+
+        <!-- 提示 -->
+        <div id="toast" class="toast" style="display: none;"></div>
+    </div>
+
+    <!-- 脚本 -->
+    <script src="js/agent-connector.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/ui.js"></script>
+    <script>
+        // 页面加载时启动游戏并连接 Agent
+        window.addEventListener('load', function() {
+            // 连接 Agent 服务
+            window.AgentManager.init([1, 2]).then(() => {
+                console.log('Agent 连接成功');
+            }).catch(e => {
+                console.log('Agent 连接失败:', e.message);
+            });
+
+            // 启动游戏
+            setTimeout(() => {
+                window.DoudizhuGame.startGame();
+                window.DoudizhuUI.update();
+            }, 500);
+        });
+    </script>
+</body>
+</html>

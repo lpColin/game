@@ -1,0 +1,16 @@
+{
+  "name": "agent-server",
+  "version": "1.0.0",
+  "description": "AI Agent 陪玩服务 - 支持多种游戏的智能陪玩",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "ws": "^8.16.0",
+    "axios": "^1.6.5"
+  }
+}
